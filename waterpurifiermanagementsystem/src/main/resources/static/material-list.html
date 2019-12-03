@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="UTF-8">
+        <title>物料信息</title>
+        <meta name="renderer" content="webkit">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="./css/font.css">
+        <link rel="stylesheet" href="./css/xadmin.css">
+        <script src="./lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="./js/xadmin.js"></script>
+        <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">
+                            <button class="layui-btn" onclick="xadmin.open('出库','./material-edit.html',600,400)"><i class="layui-icon"></i>出库</button>
+                            <button class="layui-btn" onclick="xadmin.open('入库','./material-add.html',600,400)"><i class="layui-icon"></i>入库</button>
+                            <div class="layui-inline layui-show-xs-block">
+                                <input id="content" type="text" name="content"  placeholder="请输入搜索项" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-card-body ">
+                            <table id="admin" class="layui-table layui-form">
+                                <thead>
+                              <tr>
+                                  <th>序号</th>
+                                  <th class="id" style="display: none;">id</th>
+                                  <th class="typeid" style="display: none;">typeid</th>
+                                  <th class="unitid" style="display: none;">unitid</th>
+                                  <th class="supplierid" style="display: none;">supplierid</th>
+                                  <th class="storeid" style="display: none;">storeid</th>
+                                  <th class="suppliername">供货商</th>
+                                  <th class="typename">物料名称</th>
+                                  <th class="count">数量</th>
+                                  <th class="unit">计量单位</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                                <!--查询后台获取信息-->
+                              </tbody>
+                            </table>
+                        </div>
+                        <div class="layui-card-body ">
+                            <div id="page" class="page">
+
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </body>
+    <script>
+      layui.use(['laydate','form','jquery','layer','laypage'], function() {
+          var laydate = layui.laydate;
+          var form = layui.form;
+          var layer = layui.layer
+          var laypage = layui.laypage
+          var $ = layui.$
+          var page = 1;
+          var rows = 6;
+          var count = 0;
+          //查询全部数据
+          $.ajax({
+              url: "http://localhost:8080/material/findAll",
+              data: {"page": page, "rows": rows},
+              type: "post",
+              success: function (res) {
+                  //总记录条数
+                  count = res.count
+
+                  //分页查询
+                  laypage.render({
+                      elem: "page",
+                      count: count,
+                      limit: 6,
+                      jump: function (obj, first) {
+                          if (!first) {
+                              page = obj.curr;
+                              //查询全部数据
+                              $.ajax({
+                                  url: "http://localhost:8080/material/findAll",
+                                  data: {"page": page, "rows": rows},
+                                  type: "post",
+                                  success: function (res) {
+                                      if (res.status == 200) {
+                                          $('tbody').empty()
+                                          res.object.forEach(function (value, key) {
+                                              var content = "<tr>\n" +
+                                                  "                                   <td>" + parseInt(key + 1) + "</td>\n" +
+                                                  "                                   <td class=\"id\" style=\"display: none;\">" + value.id + "</td>\n" +
+                                                  "                                   <td class=\"typeid\" style=\"display: none;\">" + value.typeid + "</td>\n" +
+                                                  "                                   <td class=\"unitid\" style=\"display: none;\">" + value.unitid + "</td>\n" +
+                                                  "                                   <td class=\"supplierid\" style=\"display: none;\">" + value.supplierid + "</td>\n" +
+                                                  "                                   <td class=\"storeid\" style=\"display: none;\">" + value.storeid + "</td>\n" +
+                                                  "                                   <td class=\"suppliername\">" + value.suppliername + "</td>\n" +
+                                                  "                                   <td class=\"typename\">" + value.typename + "</td>\n" +
+                                                  "                                   <td class=\"count\">" + value.count + "</td>\n" +
+                                                  "                                   <td class=\"unit\">" + value.unit + "</td>\n" +
+                                                  "                               </tr>"
+                                              $('tbody').append(content)
+                                              form.render("checkbox");
+                                          })
+                                      }
+                                  }
+                              })
+                          }
+                      }
+
+                  })
+                  if (res.status == 200) {
+                      $('tbody').empty()
+                      res.object.forEach(function (value, key) {
+                          var content = "<tr>\n" +
+                              "                                   <td>" + parseInt(key + 1) + "</td>\n" +
+                              "                                   <td class=\"id\" style=\"display: none;\">" + value.id + "</td>\n" +
+                              "                                   <td class=\"typeid\" style=\"display: none;\">" + value.typeid + "</td>\n" +
+                              "                                   <td class=\"unitid\" style=\"display: none;\">" + value.unitid + "</td>\n" +
+                              "                                   <td class=\"supplierid\" style=\"display: none;\">" + value.supplierid + "</td>\n" +
+                              "                                   <td class=\"storeid\" style=\"display: none;\">" + value.storeid + "</td>\n" +
+                              "                                   <td class=\"suppliername\">" + value.suppliername + "</td>\n" +
+                              "                                   <td class=\"typename\">" + value.typename + "</td>\n" +
+                              "                                   <td class=\"count\">" + value.count + "</td>\n" +
+                              "                                   <td class=\"unit\">" + value.unit + "</td>\n" +
+                              "                               </tr>"
+                          $('tbody').append(content)
+                          form.render("checkbox");
+                      })
+                  }
+              }
+          })
+      })
+    </script>
+</html>

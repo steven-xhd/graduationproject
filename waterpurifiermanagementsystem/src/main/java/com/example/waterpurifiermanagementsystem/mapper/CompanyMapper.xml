@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.waterpurifiermanagementsystem.mapper.CompanyMapper">
+  <resultMap id="BaseResultMap" type="company">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="totalcompanyid" jdbcType="INTEGER" property="totalcompanyid" />
+    <result column="tel" jdbcType="CHAR" property="tel" />
+  </resultMap>
+  <resultMap id="Base1ResultMap" type="com.example.waterpurifiermanagementsystem.vo.CompanyExample">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="totalid" jdbcType="INTEGER" property="totalid" />
+    <result column="totalname" property="totalname"/>
+    <result column="name" property="name"/>
+    <result column="tel" property="tel"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, totalcompanyid, tel
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from company
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from company
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="company">
+    insert into company (id, name, totalcompanyid, 
+      tel)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{totalcompanyid,jdbcType=INTEGER}, 
+      #{tel,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="company">
+    insert into company
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="totalcompanyid != null">
+        totalcompanyid,
+      </if>
+      <if test="tel != null">
+        tel,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="totalcompanyid != null">
+        #{totalcompanyid,jdbcType=INTEGER},
+      </if>
+      <if test="tel != null">
+        #{tel,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="company">
+    update company
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="totalcompanyid != null">
+        totalcompanyid = #{totalcompanyid,jdbcType=INTEGER},
+      </if>
+      <if test="tel != null">
+        tel = #{tel,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="company">
+    update company
+    set name = #{name,jdbcType=VARCHAR},
+      totalcompanyid = #{totalcompanyid,jdbcType=INTEGER},
+      tel = #{tel,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="findAll" resultMap="Base1ResultMap">
+    select one.id as totalid,two.id as id,one.name as totalname,two.name as name,two.tel
+    from company one,company two where one.id = two.totalcompanyid order by id desc
+  </select>
+</mapper>

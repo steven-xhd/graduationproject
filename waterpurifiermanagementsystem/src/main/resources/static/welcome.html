@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="UTF-8">
+        <title>欢迎页面-X-admin2.2</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="./css/font.css">
+        <link rel="stylesheet" href="./css/xadmin.css">
+        <script src="./lib/layui/layui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="./js/xadmin.js"></script>
+        <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+        <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <style>
+            .calender{
+                width: 150px;
+                height: 138px;
+                background: url(images/cald.png);
+                margin: 0 auto;
+            }
+            .clock{
+                width: 240px;
+                height: 146px;
+                background: url(images/clock.png);
+                margin: 0 auto;
+            }
+            #time{
+                width: 220px;
+                height: 146px;
+                padding-left: 20px;
+                font-size:45px;
+                color: white;
+                line-height: 126px;
+                text-align: center;
+                font-weight: 900;
+            }
+            #weekday{
+
+                font-size:20px;
+                color: white;
+                text-align: center;
+                padding-top: 5px;
+            }
+            #day{
+                font-size: 80px;
+                text-align: center;
+                font-weight: bolder;
+                margin-top: 40px;
+
+            }
+        </style>
+    </head>
+    <body>
+        <div class="layui-fluid">
+
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                            <blockquote class="layui-elem-quote">欢迎您：
+                                <span id="username" class="x-red">test</span>！
+                            </blockquote>
+                        </div>
+
+                    </div>
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="calender">
+                                <div id="weekday">
+
+                                </div>
+                                <div id="day">
+
+                                </div>
+                            </div>
+                            <div class="clock">
+                                <div id="time">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+    </body>
+<script>
+
+
+    layui.use(['jquery'],function () {
+        var $ = layui.jquery
+        var username = getCookie("username")
+        //设置用户名
+        $('#username').text(username);
+
+        window.onload = function(){
+
+
+            var intervalid = setInterval(function(){
+                var myDate = new Date();
+                var date = myDate.getDate();
+                var hour_now = myDate.getHours();
+                var minute_now = myDate.getMinutes();
+                var second_now = myDate.getSeconds();
+                var day = myDate.getDay();
+                switch (day) {
+                    case 1:
+                        day = '一'
+                        break;
+                    case 2:
+                        day = '二'
+                        break;
+                    case 3:
+                        day = '三'
+                        break;
+                    case 4:
+                        day = '四'
+                        break;
+                    case 5:
+                        day = '五'
+                        break;
+                    case 6:
+                        day = '六'
+                        break;
+                    case 0:
+                        day = '天'
+                        break;
+                }
+                if(minute_now <= 9){
+                    minute_now = '0'+ minute_now
+                }
+                if(second_now <= 9){
+                    second_now = '0'+ second_now
+                }
+                document.getElementById('time').innerHTML = hour_now+':'+minute_now+':'+second_now;
+                document.getElementById('weekday').innerHTML = '星期'+day;
+                document.getElementById('day').innerHTML = date;
+            },1000)
+
+        }
+
+
+    })
+    //获取指定cookie
+    function getCookie(cname)
+    {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++)
+        {
+            var c = ca[i].trim();
+            if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+        }
+        return "";
+    }
+</script>
+</html>
